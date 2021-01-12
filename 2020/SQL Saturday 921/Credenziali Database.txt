@@ -1,0 +1,8 @@
+database: worksynapse.sql.azuresynapse.net
+User: sqladminuser
+Password: Pa$$w0rd
+
+
+database: .\mssqlserver19
+User: sa
+Password: Pa$$w0rd

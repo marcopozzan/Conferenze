@@ -1,0 +1,71 @@
+﻿//--------------------------------------------DEMO 1--------------------------------------------
+//Query 1
+EVALUATE (VALUES('Sales'[Quantity]))
+
+
+
+//Query 2
+EVALUATE (VALUES('Date'[CalendarYear]))
+
+
+//Query 3
+EVALUATE 
+SUMMARIZECOLUMNS('Date'[CalendarYear],
+                 "qty",SUM('Sales'[Quantity]))
+
+// Catturato con il Performance analyzer DAX Query
+EVALUATE
+  TOPN(
+    502,
+    SUMMARIZECOLUMNS(
+      ROLLUPADDISSUBTOTAL('Date'[CalendarYear], "IsGrandTotalRowTotal"),
+      "SumQuantity", CALCULATE(SUM('Sales'[Quantity]))
+    ),
+    [IsGrandTotalRowTotal],
+    0,
+    'Date'[CalendarYear],
+    1
+  )
+
+ORDER BY
+  [IsGrandTotalRowTotal] DESC, 'Date'[CalendarYear]
+
+
+
+//Query 4
+EVALUATE 
+SUMMARIZECOLUMNS('Customer'[CustomerKey],
+                 "qty",SUM('Sales'[Quantity]))
+
+
+//Query 5 (sondaggio 1 codice 31 92 96) https://www.menti.com/pi3xjo1qf3
+EVALUATE 
+SUMMARIZECOLUMNS('Customer'[Occupation],
+                 "qty",SUM('Sales'[Quantity]))
+                 
+
+//Query 6 (sondaggio 2 codice 31 92 96) https://www.menti.com/pi3xjo1qf3
+EVALUATE 
+SUMMARIZECOLUMNS('Date'[CalendarYear],
+                 "qty",DISTINCTCOUNT('Sales'[Customerkey]))
+                 
+//--------------------------------------------DEMO 2--------------------------------------------                 
+//Query 7 - Query in memory
+EVALUATE 
+SUMMARIZECOLUMNS('Date'[CalendarYear],
+                 "qty",SUM(Sales[Quantity])
+                 )
+
+//Query 8 - Query su SQL anche se uguale alla query 5 che ci ha fatto mettere la relazione (sondaggio 3 codice 31 92 96) https://www.menti.com/pi3xjo1qf3
+EVALUATE 
+SUMMARIZECOLUMNS('customer'[Occupation],
+                 "qty",SUM(Sales[Quantity])
+                 )
+
+
+//--------------------------------------------DEMO 3--------------------------------------------                 
+//Query 9 - Query in memory (sondaggio 4 codice 31 92 96) https://www.menti.com/pi3xjo1qf3
+EVALUATE 
+SUMMARIZECOLUMNS('Date'[CalendarYear],
+                 "qty",SUM(Sales[Quantity])
+                 )
