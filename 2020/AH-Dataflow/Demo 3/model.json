@@ -1,0 +1,24 @@
+{"name":"Demo Dataflow",
+ "description":"",
+ "version":"1.0",
+ "culture":"it-IT",
+ "entities":[{"$type":"LocalEntity",
+              "name":"Calendario",
+              "description":"",
+              "pbi:refreshPolicy": {
+                "$type": "FullRefreshPolicy",
+                "location": "Calendario.csv"
+               },
+                "refreshTime": "2018-11-14T19:37:51.756186+00:00",
+              "attributes":[{"name":"Date","dataType":"date"},
+                            {"name":"Year","dataType":"int64"},
+                            {"name":"Quarter","dataType":"string"},
+                            {"name":"Month","dataType":"string"},
+                            {"name":"MonthSort","dataType":"date"},
+                            {"name":"Month in Year","dataType":"string"},
+                            {"name":"MonthInYearSort","dataType":"int64"},
+                            {"name":"Day of Week","dataType":"string"},
+                            {"name":"DayOfWeekSort","dataType":"int64"}
+                            ],
+                "partitions":[{"name":"1", "refreshTime": "2020-12-21T19:37:51.756186+00:00","location":"https://adlsafterhour.dfs.core.windows.net/synapse/Calendario.csv"}]
+                }]}
