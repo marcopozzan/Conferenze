@@ -1,0 +1,33 @@
+﻿ProductId,ProductCode,Title,Description,ProductCategory,UnitCost,ListPrice,Color,MinimumAge,MaximumAge,ProductImageUrl
+1,WP0001,Batman Action Figure,A super hero who sometimes plays the role of a dark knight.,Action Figures > Tough Guys,6.85,14.95,Black,7,12,http://classresources.blob.core.windows.net/images/WP0001.jpg
+2,WP0002,Captain America Action Figure,A super action figure that protects freedom and the American way of life.,Action Figures > Tough Guys,7.05,12.95,"Red,White,Blue",7,12,http://classresources.blob.core.windows.net/images/WP0002.jpg
+3,WP0003,GI Joe Action Figure,A classic action figure from the 1970s.,Action Figures > Tough Guys,6.1,14.95,Green,,,http://classresources.blob.core.windows.net/images/WP0003.jpg
+4,WP0004,Green Hulk Action Figure,An overly muscular action figure that strips naked when angry.,Action Figures > Tough Guys,2.85,9.95,Green,7,12,http://classresources.blob.core.windows.net/images/WP0004.jpg
+5,WP0005,Red Hulk Alter Ego Action Figure,A case of anabolic steroids with a most unfortunate outcome.,Action Figures > Tough Guys,2.85,9.95,Red,7,12,http://classresources.blob.core.windows.net/images/WP0005.jpg
+6,WP0006,Godzilla Action Figure,The classic and adorable action figure from those old Japanese movies.,Action Figures > Tough Guys,14.25,19.95,Green,10,,http://classresources.blob.core.windows.net/images/WP0006.jpg
+7,WP0007,Perry the Platypus Action Figure,A platypus who plays an overly intelligent detective sleuth on TV.,Action Figures > Cute and Huggable,12,21.95,"Green,Yellow",,,http://classresources.blob.core.windows.net/images/WP0007.jpg
+8,WP0008,Green Angry Bird Action Figure,A funny looking green bird that really hates pigs.,Action Figures > Cute and Huggable,2.1,4.95,Green,5,10,http://classresources.blob.core.windows.net/images/WP0008.jpg
+9,WP0009,Red Angry Bird Action Figure,A funny looking red bird that also hates pigs.,Action Figures > Cute and Huggable,2.1,14.95,Red,5,10,http://classresources.blob.core.windows.net/images/WP0009.jpg
+10,WP0010,Phineas and Ferb Action Figure Set,The dynamic duo of the younger generation.,Action Figures > Cute and Huggable,12.25,19.95,"Green,Red",5,51,http://classresources.blob.core.windows.net/images/WP0010.jpg
+11,WP0011,Black Power Ranger Action Figure,A particularly violent action figure for violent children.,Action Figures > Cute and Huggable,6.15,7.5,"Black,White",8,12,http://classresources.blob.core.windows.net/images/WP0011.jpg
+12,WP0012,Woody Action Figure,"The lovable, soft-spoken cowboy from Toy Story.",Action Figures > Cute and Huggable,7.1,9.95,"Blue,Yellow",,12,http://classresources.blob.core.windows.net/images/WP0012.jpg
+13,WP0013,Spiderman Action Figure,The classic superhero who is quite the swinger.,Action Figures > Tough Guys,10.4,12.95,"Red,Blue",8,12,http://classresources.blob.core.windows.net/images/WP0013.jpg
+14,WP0014,Twitter Follower Action Figure,An inexpensive action figure you can never have too many of.,Action Figures > Cute and Huggable,0.08,1,"Yellow,Blue",12,,http://classresources.blob.core.windows.net/images/WP0014.jpg
+15,WP0015,Crayloa Crayon Set,A very fun set of crayons in every color.,Arts and Crafts > Drawing,1.2,2.49,"Blue,Red,Green,Yellow",10,,http://classresources.blob.core.windows.net/images/WP0015.jpg
+16,WP0016,Sponge Bob Coloring Book,A drawing extravaganza based on America's most recognizable celebrity.,Arts and Crafts > Drawing,0.85,2.95,Yellow,7,12,http://classresources.blob.core.windows.net/images/WP0016.jpg
+17,WP0017,Easel with Supply Trays,A serious easel for serious young artists.,Arts and Crafts > Painting,12.1,49.95,White,,12,http://classresources.blob.core.windows.net/images/WP0017.jpg
+18,WP0018,Crate o' Crayons,More crayons that you can shake a stick at.,Arts and Crafts > Drawing,10.5,14.95,"Blue,Red,Green,Yellow",7,12,http://classresources.blob.core.windows.net/images/WP0018.jpg
+19,WP0019,Etch A Sketch,A strategic planning tool for the Romney campaign.,Arts and Crafts > Drawing,7.25,12.95,Red,7,,http://classresources.blob.core.windows.net/images/WP0019.jpg
+20,WP0020,Green Hornet,A fast car for crusin' the strip at night.,Remote Control Vehicles > Cars,18.25,24.95,Green,10,,http://classresources.blob.core.windows.net/images/WP0020.jpg
+21,WP0021,Red Wacky Stud Bumper,A great little vehicle for off road fun.,Remote Control Vehicles > Trucks,12.6,24.95,Red,10,,http://classresources.blob.core.windows.net/images/WP0021.jpg
+22,WP0022,Red Stomper Bully,A great toy that can crush and destroy all your other toys.,Remote Control Vehicles > Trucks,21.5,29.95,Red,10,,http://classresources.blob.core.windows.net/images/WP0022.jpg
+23,WP0023,Green Stomper Bully,A green alternative to crush and destroy the Red Stomper Bully.,Remote Control Vehicles > Trucks,14.5,24.95,Green,10,,http://classresources.blob.core.windows.net/images/WP0023.jpg
+24,WP0024,Indy Race Car,The fastest remote control race car on the market today.,Remote Control Vehicles > Cars,12,19.95,Black,10,,http://classresources.blob.core.windows.net/images/WP0024.jpg
+25,WP0025,Turbo-boost Speedboat,The preferred water vehicle of gun runners and drug kingpins.,Remote Control Vehicles > Boats,12.5,32.95,Red,21,,http://classresources.blob.core.windows.net/images/WP0025.jpg
+26,WP0026,Sandpiper Prop Plane,A simple RC prop plane for younger pilots.,Remote Control Vehicles > Planes,16.5,24.95,White,15,,http://classresources.blob.core.windows.net/images/WP0026.jpg
+27,WP0027,Flying Badger,A tough fighter plane to root out evil anywhere it lives.,Remote Control Vehicles > Planes,20.5,27.95,Blue,15,,http://classresources.blob.core.windows.net/images/WP0027.jpg
+28,WP0028,Red Barron von Richthofen,A classic RC plane to hunt down and take out Snoopy.,Remote Control Vehicles > Planes,22.5,32.95,Red,15,,http://classresources.blob.core.windows.net/images/WP0028.jpg
+29,WP0029,Flying Squirrel,A stealthy remote control plane that flies on the down-low and under the radar.,Remote Control Vehicles > Planes,24,69.95,Grey,18,,http://classresources.blob.core.windows.net/images/WP0029.jpg
+30,WP0030,FOX News Chopper,A new chopper which can generate new events on demand.,Remote Control Vehicles > Planes,12,29.95,Blue,18,,http://classresources.blob.core.windows.net/images/WP0030.jpg
+31,WP0031,Seal Team 6 Helicopter,A serious helicopter that can open up a can of whoop-ass when required.,Remote Control Vehicles > Helicopter,35.4,59.95,Green,18,,http://classresources.blob.core.windows.net/images/WP0031.jpg
+32,WP0032,Personal Commuter Chopper,A partially-tested remote control device that can actually carry real people.,Remote Control Vehicles > Helicopter,65.75,99.95,Red,18,,http://classresources.blob.core.windows.net/images/WP0032.jpg
