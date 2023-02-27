@@ -1,0 +1,8 @@
+DiscountPct = 
+DIVIDE (
+    SalesHeader[TotalDiscount],
+    SUMX (
+        RELATEDTABLE ( SalesDetail ),
+        SalesDetail[Unit Price] * SalesDetail[Quantity]
+    )
+)
