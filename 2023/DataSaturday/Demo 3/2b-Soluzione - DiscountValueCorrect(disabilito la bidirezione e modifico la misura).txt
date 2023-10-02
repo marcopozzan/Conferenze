@@ -1,0 +1,7 @@
+DiscountValueCorrect = 
+SUMX (
+    SalesDetail,
+    RELATED ( SalesHeader[DiscountPct] ) 
+    * SalesDetail[Unit Price] 
+    * SalesDetail[Quantity]
+)

@@ -1,0 +1,1 @@
+LineDiscount = SalesDetail[Quantity] * SalesDetail[UnitPrice] * RELATED(SalesHeader[Discount Pct])

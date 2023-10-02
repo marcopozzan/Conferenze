@@ -1,0 +1,72 @@
+spark.conf.set("spark.sql.parquet.vorder.enabled", "true")
+spark.conf.set("spark.microsoft.delta.optimizeWrite.enabled", "true")
+#spark.conf.set("spark.microsoft.delta.optimizeWrite.binSize", "1073741824")
+    
+
+#Tabella City
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/Cities.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_Cities")
+
+#Tabella Countries
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/Countries.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_Countries")
+
+#Tabella DeliveryMethods
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/DeliveryMethods.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_DeliveryMethods ")
+
+#Tabella People
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/People.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_People")
+
+#Tabella StateProvinces
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/StateProvinces.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_StateProvinces")
+
+#Tabella SupplierCategories
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/SupplierCategories.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_Categories")
+
+#Tabella Suppliers
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/Suppliers.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_Suppliers")
+
+#Tabella PurchasingSuppliersCategories
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/SupplierCategories.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_SupplierCategories")
+
+#Tabella BuyingGroups
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/BuyingGroups.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_SalesBuyingGroups")
+
+#Tabella CustomerCategories
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/CustomerCategories.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_CustomerCategories")
+
+#Tabella Customers
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/Customers.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_Customers")
+
+#Tabella Colors
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/Colors.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_Colors")
+
+#Tabella PackageTypes
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/PackageTypes.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_PackageTypes")
+
+#Tabella StockItems
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/StockItems.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_StockItems")
+
+#Tabella Sales Order
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/SalesOrder/*/*.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_SalesOrder")
+
+#Tabella Sales Order line
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/SalesOrderLine/*/*.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_SalesOrderLine")
+
+#Tabella Date
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_raw_data_WWI/Date.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_Date")
