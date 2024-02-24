@@ -334,5 +334,5 @@ Now the decision is yours: Do you want to build your Gold Layer/Star Schema in a
 
 ## Build Gold Layer
 Choose one of the 2 patterns to complete your end-to-end architecture:
-### [Pattern 1: Build Star Schema in Fabric Lakehouse](/2024/DataSaturday48/PATTERN1_LAKEHOUSE.md)
-### [Pattern 2: Build Star Schema in Fabric Data Warehouse](/2024/DataSaturday48/PATTERN2_DATAWAREHOUSE.md)
+### [Pattern 1: Build Gold Layer (Star Schema) in Fabric Lakehouse](/2024/DataSaturday48/PATTERN1_LAKEHOUSE.md)
+### [Pattern 2: Build Gold Layer (Star Schema) in Fabric Data Warehouse](/2024/DataSaturday48/PATTERN2_DATAWAREHOUSE.md)
