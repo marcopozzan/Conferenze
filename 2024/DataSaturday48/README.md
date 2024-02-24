@@ -1,4 +1,4 @@
-# Solution Guide: Build Metadata Driven Pipelines in Microsoft Fabric
+# Build Metadata Driven Pipelines in Microsoft Fabric
 
 ## Description
 
