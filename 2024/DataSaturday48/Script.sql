@@ -1,0 +1,1 @@
+select * from dbo.PipelineOrchestrator_FabricLakehouse where skipload=0 and 1=1
