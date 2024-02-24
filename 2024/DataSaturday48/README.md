@@ -4,11 +4,6 @@
 
 Metadata-driven pipelines in Azure Data Factory, Synapse Pipelines, and now, Microsoft Fabric, give you the capability to ingest and transform data with less code, reduced maintenance and greater scalability than writing code or pipelines for every data source entity that needs to be ingested and transformed. The key lies in identifying the data loading and transformation pattern(s) for your data sources and destinations and then building the framework to support each pattern.
 
-## Prerequisites
-* Permissions to create the Azure Resource Group, Azure Storage Account, Azure SQL Server and Azure SQL DBs needed for this tutorial.
-* Permissions to create a Microsoft Fabric Workspace
-* SQL Server Management Studio or Azure Data Studio
-* Basic understanding of creating data pipelines, either from Azure Data Factory, Synapse Analytics or Microsoft Fabric.
 ## Create Azure Resources
 Create an Azure Resource Group, Storage Account, and Azure SQL DBs needed for this tutorial.
 ### Create an Azure Resource group 
@@ -325,7 +320,7 @@ Run the Orchestrator pipeline to load the Lakehouse. When it is complete, you sh
 
 Now that we have the tables in our Fabric Lakehouse, we can create SQL views over them which will be used to load our Fabric Gold Lakehouse and/or our Fabric Data Warehouse.
 
-## Create Data Warehouse Views
+## Create Silver Layer with View
 If you read the original blog posts, you would know that at this point in time the Lakehouse SQL Endpoint is not exposed in the Copy Data pipeline activity. So while you can build SQL views in the Lakehouse, you can not leverage them in a Copy Data activity. Therefore, we will create the SQL Views in the Fabric Data Warehouse.
 1. Download the Datawarehouse SQL script file [located here](src/fabricdw/create-fabric-dw-views.sql).
 1. Open the downloaded SQL script (create-fabric-dw-views.sql) using notepad and copy the entire contents of the script.
@@ -337,7 +332,7 @@ If you read the original blog posts, you would know that at this point in time t
 
 Now the decision is yours: Do you want to build your Gold Layer/Star Schema in another Fabric Lakehouse ala Pattern 1? Or does the Fabric Data Warehouse better suit your needs?
 
-## Build Star Schema
+## Build Gold Layer
 Choose one of the 2 patterns to complete your end-to-end architecture:
 ### [Pattern 1: Build Star Schema in Fabric Lakehouse](/2024/DataSaturday48/PATTERN1_LAKEHOUSE.md)
 ### [Pattern 2: Build Star Schema in Fabric Data Warehouse](/2024/DataSaturday48/PATTERN2_DATAWAREHOUSE.md)
