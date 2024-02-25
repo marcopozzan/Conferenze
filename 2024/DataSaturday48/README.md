@@ -191,7 +191,7 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
         | Settings | Advanced -> Base parameters | tableName         | Dynamic Content | @pipeline().parameters.sinktablename       |
         | Settings | Advanced -> Base parameters | tableKey          | Dynamic Content | @pipeline().parameters.sourcekeycolumn     |
         | Settings | Advanced -> Base parameters | dateColumn        | Dynamic Content | @pipeline().parameters.sqlsourcedatecolumn |
-    1. Add **Set variable**, drag the green arrow from the previous activity to it and configure:
+    1. Aggiungere una attività di  **Set variable**, e configurarlo come segue:
         | Tab      | Configuration | Value Type         | Value                                                                          |
         | -------- | ------------- | ------------------ | ------------------------------------------------------------------------------ |
         | General  | Name          | String             | Get maxdate incr                                                               |
