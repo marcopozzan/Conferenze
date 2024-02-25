@@ -140,7 +140,7 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
         | Settings | Name          | Dropdown           | maxdate                                                                             |
         | Settings | Value         | Dynamic Content | @split(split(activity('Get MaxDate loaded').output.result.exitValue,'\|')[0],'=')[1] |
    
-    8.4. Add another **Set variable**, drag the green arrow from the previous activity to it and configure:
+    1. Aggiungere una attività di **Set variable**,e configuralo come segue:
         | Tab      | Configuration | Value Type   | Value             |
         | -------- | ------------- | ------------ | ----------------- |
         | General  | Name          | String       | set rows inserted |
@@ -148,7 +148,7 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
         | Settings | Name          | Dropdown     | rowsinserted      |
         | Settings | Value         | Dynamic Content | @split(split(activity('Get MaxDate loaded').output.result.exitValue,'\|')[1],'=')[1] |
    
-    8.5. Add another **Set variable**, drag the green arrow from the previous activity to it and configure:
+    1. Aggiungere una attività di **Set variable**, e configuralo come segue:
         | Tab      | Configuration | Value Type         | Value                |
         | -------- | ------------- | ------------------ | -------------------- |
         | General  | Name          | String             | Set pipeline endtime |
@@ -156,7 +156,7 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
         | Settings | Name          | Dropdown           | pipelineendtime      |
         | Settings | Value         | Dynamic Content | @utcnow()            |
    
-     8.6. Add  **Script**, drag the green arrow from the previous activity to it and configure:
+     1. Aggiungere una attività di  **Script**, e configuralo come segue:
         | Tab      | Configuration   | Value Type   | Value                           |
         | -------- | --------------- | ------------ | ------------------------------- |
         | General  | Name            | String       | Update Pipeline Run details     |
@@ -164,9 +164,9 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
         | Settings | Connection      | Dropdown     | Connection to FabricMetdataOrchestration Database |
         | Settings | Script          | Radio Button | NonQuery                        |
         | Settings | Script          | Dynamic Content  | Update dbo.PipelineOrchestrator_FabricLakehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{activity('Copy data to delta table').output.executionDetails[0].status}', rowsread = @{activity('Copy data to delta table').output.rowsRead}, rowscopied= @{activity('Copy data to delta table').output.rowsCopied}, deltalakeinserted = '@{variables('rowsinserted')}', deltalakeupdated =0, sqlmaxdatetime = '@{variables('maxdate')}', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}' where sqlsourceschema = '@{pipeline().parameters.sqlsourceschema}' and sqlsourcetable = '@{pipeline().parameters.sqlsourcetable}' |
-    1. Exit the **True activities** box of the **If condition** by clicking on  **Main canvas** in the upper left corner
-9. Now configure the **If False** activities. Your False activities will be a flow of activities when the table to be loaded should be an incremental load. When completed, the False activities will look like this: ![wwi-incremental](images/wwi-incremental-activities.jpg)
-    9.1. Aggiungere attività **Copy Data**:
+    
+9. Ora configuriamo il ramo **If False** : ![wwi-incremental](images/wwi-incremental-activities.jpg)
+    1. Aggiungere attività **Copy Data**:
         | Tab     | Configuration   | Value Type   | Value                           |
         | ------- | --------------- | ------------ | ------------------------------- |
         | General | Name            | String       | Copy data to parquet            |
@@ -182,7 +182,7 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
         | Destination  | File Path (1)  | Dynamic Content | incremental/@{pipeline().parameters.sinktablename} |
         | Destination  | File Path (2)  | Dynamic Content | @{pipeline().parameters.sinktablename}.parquet |
         | Destination  | File format      | Drop down | Parquet |
-    9.2. Aggiungere attività **Notebook** e configuralo come segue:
+    1. Aggiungere attività **Notebook** e configuralo come segue:
         | Tab      | Configuration               | Add New Parameter | Value Type         | Value                                      |
         | -------- | --------------------------- | ----------------- | ------------------ | ------------------------------------------ |
         | General  | Settings                    |                   | String             | Load to Delta                              |
@@ -198,28 +198,28 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
         | Settings | Variable type | Radio Button       | Pipeline variable                                                              |
         | Settings | Name          | Dropdown           | maxdate                                                                        |
         | Settings | Value         | Dynamic Content | @split(split(activity('Load to Delta').output.result.exitValue,'\|')[0],'=')[1] |
-    1. Add **Set variable**, drag the green arrow from the previous activity to it and configure:
+    1.  Aggiungere una attività di **Set variable**, e configurarlo come segue:
         | Tab      | Configuration | Value Type         | Value                                                                          |
         | -------- | ------------- | ------------------ | ------------------------------------------------------------------------------ |
         | General  | Name          | String             | set rows inserted incr                                                         |
         | Settings | Variable type | Radio Button       | Pipeline variable                                                              |
         | Settings | Name          | Dropdown           | rowsinserted                                                                   |
         | Settings | Value         | Dynamic Content | @split(split(activity('Load to Delta').output.result.exitValue,'\|')[1],'=')[1] |
-    1. Add **Set variable**, drag the green arrow from the previous activity to it and configure:
+    1. Aggiungere una attività di  **Set variable**, e configurarlo come segue:
         | Tab      | Configuration | Value Type         | Value                                                                          |
         | -------- | ------------- | ------------------ | ------------------------------------------------------------------------------ |
         | General  | Name          | String             | set rows updated incr                                                          |
         | Settings | Variable type | Radio Button       | Pipeline variable                                                              |
         | Settings | Name          | Dropdown           | rowsupdated                                                                    |
         | Settings | Value         | Dynamic Content | @split(split(activity('Load to Delta').output.result.exitValue,'\|')[2],'=')[1] |
-    1. Add **Set variable**, drag the green arrow from the previous activity to it and configure:
+    1. Aggiungere una attività di  **Set variable**, e configurarlo come segue:
         | Tab      | Configuration | Value Type         | Value                     |
         | -------- | ------------- | ------------------ | ------------------------- |
         | General  | Name          | String             | Set pipeline endtime incr |
         | Settings | Variable type | Radio Button       | Pipeline variable         |
         | Settings | Name          | Dropdown           | pipelineendtime           |
         | Settings | Value         | Dynamic Content | @utcnow()                 |
-    1. Add  **Script**, drag the green arrow from the previous activity to it and configure:
+    1. Aggiungere una attività di  **Script** e configurarlo come segue:
         | Tab      | Configuration   | Value Type   | Value                                             |
         | -------- | --------------- | ------------ | ------------------------------------------------- |
         | General  | Name            | String       | Update Pipeline Run details - incremental         |
@@ -227,14 +227,12 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
         | Settings | Connection      | Dropdown     | Connection to FabricMetdataOrchestration Database |
         | Settings | Script(1)       | Radio Button | NonQuery                                          |
         | Settings | Script(2)       | Dynamic Content | Update dbo.PipelineOrchestrator_FabricLakehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{activity('Copy data to parquet').output.executionDetails[0].status}', rowsread = @{activity('Copy data to parquet').output.rowsRead}, rowscopied= @{activity('Copy data to parquet').output.rowsCopied},deltalakeinserted = '@{variables('rowsinserted')}',deltalakeupdated = '@{variables('rowsupdated')}', sqlmaxdatetime = '@{variables('maxdate')}', sqlstartdate = '@{variables('maxdate')}', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}'  where sqlsourceschema = '@{pipeline().parameters.sqlsourceschema}' and sqlsourcetable = '@{pipeline().parameters.sqlsourcetable}' |
-    1. Exit the **False activities** box of the **If condition** by clicking on  **Main canvas** in the upper left corner
-If you have gotten this far, awesome! Thank you! Save your changes! You are done with your first pipeline!
 
-### Create the Orchestration Pipeline
-To run the pipeline, we will create an Orchestrator pipeline. An Orchestrator pipeline is the main pipeline that coordinates the flow and execution of all pipeline activities, including calling other pipelines. When you are finished with the steps below, your Orchestrator Pipeline will look like this: ![orchestrator-1](images/orchestrator-1.jpg)
-1. Create a new Data Pipeline called **orchestrator Load WWI to Fabric**
-1. Add a **Set Variable** activity
-1. Click on the canvas and create the following **Parameters**:
+### Creazione della pipeline di Orchestration
+Per eseguire la pipeline, creeremo una pipeline Orchestrator. Una pipeline Orchestrator è la pipeline principale che coordina il flusso e l'esecuzione di tutte le attività della pipeline, inclusa la chiamata ad altre pipeline. Una volta terminati i passaggi seguenti, la pipeline dell'orchestrator avrà il seguente aspetto: ![orchestrator-1](images/orchestrator-1.jpg)
+1. Crea una nuova pipeline di dati denominata **orchestrator Load WWI to Fabric**
+1. Aggiungi una attività di **Set Variable**:
+1. Fare clic sulla tela e creare quanto segue **Parameters**:
    | Name       | Type | Default Value | Description                                             |
    | ---------- | ---- | ------------- | ------------------------------------------------------- |
    | startyear  | int  | 2013          | Year to start loading from WWI                          |
