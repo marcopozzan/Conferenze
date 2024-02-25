@@ -40,8 +40,8 @@ Abbiamo bisogno di un Data Warehouse perchè ,anche se le visualizzazioni possan
 Prima di proseguire dobbiamo creare una connessione al database Wide World Importers e al FabricMetadataConfiguration seguendo queste istruzioni [istruzioni](https://learn.microsoft.com/en-us/fabric/data-factory/connector-azure-sql-database).
 
 ### Caricamento dei Notebooks Spark su Fabric
-1. Scarica i 3 notebooks [found in the repo](src/notebooks/)
-2. **Import notebook**![Import Notebook](images/datascience-import-1.jpg) e poi selezionare i file da caricare ![downloaded.](images/datascience-import-2.jpg)
+1. Scarica i 3 notebooks [dentro il repository](src/notebooks/)
+2. **Import notebook**![Importazione Notebook](images/datascience-import-1.jpg) e poi selezionare i file da caricare ![Scarica.](images/datascience-import-2.jpg)
 
 ## Creazione della Pipelines per caricare dati da World Wide Importers a Fabric Lakehouse
 È importante copiare il testo esattamente così com'è per evitare errori negli script o nelle attività successive. Ecco un paio di esempi:
@@ -52,11 +52,11 @@ Le istruzioni sopra riportate ti dicono di andare nella pipeline **Parametri**, 
 
 ![instruction2](images/instructions2.jpg)
 
-Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una tabella dagli importatori mondiali a Fabric Lakehouse. Una volta terminata la pipeline sarà simile alla seguente: ![get-wwi-data] ![get-wwi-data](images/get-wwi-data-pipeline.jpg)
+Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una tabella dagli importatori mondiali a Fabric Lakehouse. Una volta terminata la pipeline sarà simile alla seguente: ![get-wwi-data](images/get-wwi-data-pipeline.jpg)
 
-1. Create a new Data Pipeline and call it "**Get WWImporters Data direct**"
-1. Add a **Set variable** activity
-1. Click on the canvas and add the following  pipeline **Parameters**:
+1. Crea una nuova Pipeline  e chiamala "**Get WWImporters Data direct**"
+2. Aggiungi una attività  di **Set variable** 
+3. Fare clic sull'area di disegno e aggiungere la seguente pipeline **Parameters**:
 
       Name                | Type   |
      ------------------- | ------ |
@@ -69,7 +69,8 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
      loadtype            | String |
      sourcekeycolumn     | String |
      batchloaddatetime   | String |
-1. Move to the **Variables** tab and add the following variables: 
+
+4.Spostati sulle  **Variables** come scheda e aggiungi le seguenti variabili: 
 
     | Name              | Type   |
     | ----------------- | ------ |
@@ -79,7 +80,8 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
     | rowsupdated       | String |
     | pipelinestarttime | String |
     | pipelineendtime   | String |
-1. Configure the **Set variable** activity created in the 2nd step:
+    
+5. Configura l'attività di  **Set variable** creata al passo 2:
 
     | Tab      | Configuration | Value Type         | Value                 |
     | -------- | ------------- | ------------------ | --------------------- |
@@ -87,7 +89,8 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
     | Settings | Variable type | Radio Button       | Pipeline variable     |
     | Settings | Name          | String             | pipelinestarttime     |
     | Settings | Value         | Dynamic Content | @utcnow()             |
-1. Add another **Set variable**, drag the green arrow from the previous activity to it and configure:
+   
+6. Aggiugni un nuovo **Set variable**, e configuralo come segue:
 
     | Tab      | Configuration | Value Type   | Value              |
     | -------- | ------------- | ------------ | ------------------ |
@@ -95,13 +98,15 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
     | Settings | Variable type | Radio Button | Pipeline variable  |
     | Settings | Name          | String       | datepredicate      |
     | Settings | Value         | Dynamic Content |@if(equals(pipeline().parameters.sqlenddate,null),concat(pipeline().parameters.sqlsourcedatecolumn,' >= ''', pipeline().parameters.sqlstartdate,''''),concat(pipeline().parameters.sqlsourcedatecolumn, ' >= ''',pipeline().parameters.sqlstartdate,''' and ', pipeline().parameters.sqlsourcedatecolumn,' < ''',pipeline().parameters.sqlenddate,'''')) |
-1. Add **If condition** activity, drag arrow from previous activity and configure:
+   
+7. Aggiungi una attività di **If condition** e configuralo come segue:
     | Tab        | Configuration | Value Type         | Value                                          |
     | ---------- | ------------- | ------------------ | ---------------------------------------------- |
     | General    | Name          | String             | Check loadtype                                 |
     | Activities | Expression    | Dynamic Content | @equals(pipeline().parameters.loadtype,'full') |
-1. Now configure the **If True** activities. Your True activities will be a flow of activities when the table to be loaded should be a full load. When completed, the True activities will look like this: ![full-load](images/wwi-fullload-activities.jpg)
-    1. Add **Copy Data** activity and configure:
+   
+8. Ora configura la parte dell' **If True**. Una volta completate, le attività di configurazione apparira così: ![full-load](images/wwi-fullload-activities.jpg)
+    8.1. Aggiungi una attività di **Copy Data**  e configurala così:
         | Tab     | Configuration   | Value Type   | Value                           |
         | ------- | --------------- | ------------ | ------------------------------- |
         | General | Name            | String       | Copy data to delta table        |
@@ -116,7 +121,8 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
         | Destination | Root folder               | Radio button       | Tables                               |
         | Destination | Table name                | Dynamic Content | @pipeline().parameters.sinktablename |
         | Destination | Advanced-> Table action   | Radio button       | Overwrite                            |
-    1. Add **Notebook** activity, drag arrow from previous activity and configure:
+   
+    8.2.  Aggiungi una attività di **Notebook** e configurala così:
         | Tab      | Configuration               | Add New Parameter | Value Type         | Value                                      |
         | -------- | --------------------------- | ----------------- | ------------------ | ------------------------------------------ |
         | General  | Settings                    |                   | String             | Get MaxDate loaded                         |
@@ -125,7 +131,8 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
         | Settings | Advanced -> Base parameters | tableName         | Dynamic Content | @pipeline().parameters.sinktablename       |
         | Settings | Advanced -> Base parameters | tableKey          | Dynamic Content | @pipeline().parameters.sourcekeycolumn     |
         | Settings | Advanced -> Base parameters | dateColumn        | Dynamic Content | @pipeline().parameters.sqlsourcedatecolumn |
-    1. Add **Set variable**, drag the green arrow from the previous activity to it and configure:
+   
+    8.3. Aggiungi una attività di  **Set variable** e configurala così:
         | Tab      | Configuration | Value Type         | Value                                                                               |
         | -------- | ------------- | ------------------ | ----------------------------------------------------------------------------------- |
         | General  | Name          | String             | Get maxdate                                                                         |
