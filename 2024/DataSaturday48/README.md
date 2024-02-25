@@ -491,29 +491,20 @@ Ora dobbiamo modificare la pipeline che fa da Orchestrator, **orchestrator Load 
 Il risultato finale dovrebbe essere come lo schema seguente: ![run-gold](images/run-gold-only.jpg)
 Dopo aver fatto girare la pipeline dovremmoa vere la seguente situazione all'interno del lakehouse: ![gold-lh](images/goldlh-tables.jpg)
 
-
-### [Pattern 2: Build Gold Layer (Star Schema) in Fabric Data Warehouse](/2024/DataSaturday48/Pattern2.md)
-# Pattern 2: Load from Fabric Lakehouse to Fabric Data Warehouse
-To complete this pipeline you will:
-
-- Download and run the scripts to create the Fabric Datawarehouse Tables and Stored Procedures
-- Create the pipeline to load data from the Fabric Lakehouse to the Data Warehouse
-- Update the Orchestrator pipeline to do the Lookup against the Metadata Database table and call the new pipeline
-
-## Create Fabric Data Warehouse Tables and Stored Procedures
-
-Download the Datawarehouse SQL script file [located here](src/fabricdw/create-fabric-dw-objects.sql).
-1. Open the downloaded SQL script (create-fabric-dw-objects.sql) using notepad and copy the entire contents of the script.
-1. From the Fabric portal, go to your Fabric Workspace and open your Data Warehouse and [create a new Query](https://learn.microsoft.com/en-us/fabric/data-warehouse/query-warehouse).
-1. Paste the code into the Fabric Data Warehouse query.
-1. Do a Find and Replace **[Ctrl-H]** and replace the text **myFTAFabricWarehouse** with your Fabric Warehouse name.
-1. Do another Find and Replace and replace the text **myFTAFabricLakehouse** with your Fabric Lakehouse name.
-1. Run the SQL query script. After running the script, you should see the following tables and stored procedures in the Gold schema of your Fabric Data Warehouse:  
+## Costruire il Gold Layer con il secondo pattern (datawarehouse)
+## Creazione la pipeline che carica i dati dal Fabric Data Warehouse al Gold Layer
+Scarica il file di script SQL del datawarehouse [posizionati qui](src/fabricdw/create-fabric-dw-objects.sql).
+1. Apri lo script SQL scaricato (create-fabric-dw-objects.sql) utilizzando il blocco note e copia l'intero contenuto dello script.
+1. Dal portale Fabric, vai al tuo Fabric Workspace e apri il tuo Data Warehouse e [crei una nuova query](https://learn.microsoft.com/en-us/fabric/data-warehouse/query-warehouse).
+1. Incolla il codice nella query Fabric Data Warehouse.
+1. Esegui Trova e sostituisci **[Ctrl-H]** e sostituisci il testo **myFTAFabricWarehouse** con il nome Fabric Warehouse.
+1. Fai un altro Trova e sostituisci e sostituisci il testo **myFTAFabricLakehouse** con il nome del Fabric Lakehouse.
+1. Esegui lo script della query SQL. Dopo aver eseguito lo script, dovresti vedere le seguenti tabelle e store procedure nello schema Gold del tuo Fabric Data Warehouse:  
 ![dw-views](images/dw-objects.jpg)
 
-## Create the pipeline to load from Fabric Lakehouse to Gold Data Warehouse
+## Crea la pipeline da caricare da Fabric Lakehouse al Gold Data Warehouse
 
-When this pipeline is complete, it will look like this: ![gold-dw-tables](images/golddw-tables.jpg)
+Una volta completata la pipeline, apparirà così: ![gold-dw-tables](images/golddw-tables.jpg)
 
 1. Create a new Data Pipeline called **Load Warehouse Table**
 1. Add a **Set Variable** activity
