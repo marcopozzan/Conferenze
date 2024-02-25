@@ -1,101 +1,47 @@
-# Build Metadata Driven Pipelines in Microsoft Fabric
+## Descrizione
+Le pipeline basate sui metadati in Azure Data Factory, Synapse Pipelines e ora in Microsoft Fabric ti offrono la possibilità di inserire e trasformare i dati con meno codice, manutenzione ridotta e maggiore scalabilità rispetto alla scrittura di codice o pipeline per ogni entità di origine dati che deve essere ingerito e trasformato. La chiave sta nell'identificare i modelli di caricamento e trasformazione dei dati per le origini e le destinazioni dei dati e quindi creare la struttura per supportare ciascun modello.
 
-## Description
+## Creare le Azure Resource
+Creare un Azure Resource Group, un Storage Account e l'Azure SQL DBs necessario. 
+### Creare un Azure Resource group 
 
-Metadata-driven pipelines in Azure Data Factory, Synapse Pipelines, and now, Microsoft Fabric, give you the capability to ingest and transform data with less code, reduced maintenance and greater scalability than writing code or pipelines for every data source entity that needs to be ingested and transformed. The key lies in identifying the data loading and transformation pattern(s) for your data sources and destinations and then building the framework to support each pattern.
+Se necessario, per creare il gruppo di risorse.
+### Creare un Azure Storage account
+Create un blob storage account nel resource group creato prima. Questo verrà utilizzato per ripristinare il database Wide World Importers.
 
-This solution guide is a companion to 2 blog posts about Metadata Driven Pipelines in Fabric. Both involve landing the data in a Fabric Lakehouse and building a Star Schema for the Gold Layer:
-- Pattern 1: [Metadata Driven Pipelines in Fabric](https://techcommunity.microsoft.com/t5/fasttrack-for-azure/metadata-driven-pipelines-for-microsoft-fabric/ba-p/3891651) illustrates creating the Star Schema in a Fabric Lakehouse. 
-- Pattern 2: [Metadata Driven Pipelines in Fabric with Data Warehouse](https://techcommunity.microsoft.com/t5/fasttrack-for-azure/metadata-driven-pipelines-for-microsoft-fabric-part-2-data/ba-p/3906749) covers using a Fabric Data Warehouse for the Star Schema and why you may want to choose this option.
+### Creare un Azure SQL Server
+La schermata dovrebbe essere simile a quella qui sotto: ![create-sql-server1](images/create-sqlserver-1.jpg)
+Andre sulla tab del  **Networking**  e modificare le Regole firewall in **Yes** per consentire ai servizi e alle risorse di Azure di accedere a questo server.![create-sql-server2](images/create-sqlsserver-2.jpg)
 
- The intent is to provide step-by-step instructions on how to build the Metadata Driven Pipelines described in those blogs. The reason is 2-fold - this will help you better understand Microsoft Fabric, but also because Fabric is not fully integrated with Git at this time. There are no ARM templates to deploy like in Azure Synapse or Data Factory. However, when Fabric supports Git integration with Pipelines and Connections, we will create another pattern which will allow you deploy all Fabric artifacts into your own Fabric tenant.
+### Crea un Azure SQL DB per le configurazione della Metadata Driven Pipeline
+1. seguire le istruzioni dell'immagine per la creazione ![sqldb1](images/create-sqldb-1.jpg)
+2. usare come nome di database  **FabricMetadataOrchestration** 
+3. Come **Workload environment** scegliere **Development**![sqldb2](images/create-sqldb-2.jpg)
+4. Mentre nella scheda **Networking** sotto **Firewall rules**, aggiungere l'ip **Add current client IP address** to **Yes** ![sqldb3](images/create-sqldb-3.jpg)
+5. Cliccare su **Review and create**
+   
+### Download e restore del database Wide World Importers Database
+1. Download del database Wide World Importers per Azure SQL DB. [Click here to immediately download the bacpac](https://github.com/Microsoft/sql-server-samples/releases/download/wide-world-importers-v1.0/WideWorldImporters-Standard.bacpac)
+1.Caricare il bacpac nello  storage account creato precedentemente e restore del database Wide World Importers. [Follow the instructions here](https://learn.microsoft.com/en-us/azure/azure-sql/database/database-import?view=azuresql&tabs=azure-powershell),
 
-For both patterns, you will:
+## Creare gli oggetti in Azure SQL DB
+Prima le viste scaricando da qui lo script [in this repo](src/sql/1-wwi/create_source_views.sql). Dopo l'eseguzione degli script dobbiamo avere questa situazione ![wwiviews](images/metadata-tables-1.jpg)
 
-- Create Azure Resources, including a Resource Group, Storage Account, Azure SQL Server and Azure SQL DBs
-- Create the Azure SQL DB objects, including the Metadata Driven Pipeline tables
-- Create the Microsoft Fabric Resources
-- Create Fabric Data Pipelines to Orchestrate and Load from the World Wide Importers Azure SQL DB to the Fabric Lakehouse
-- Create Views over the Fabric Lakehouse Tables
+### Caricare le tabelle del database che contiene i metadati
+Scarichiamo ed eseguiamo lo script che trovate qui [in this repo](src/sql/2-metadatadb/create-metadata-tables.sql) Il risultato finale sarà il seguente: ![tables](images/metadata-tables-2.jpg)
+Notare i valori per le colonne **loadtype**, **sqlsourcedatecolumn**, **sqlstartdate** e **sqlenddate** della tabella **PipelineOrchestrator_FabricLakehouse**. Per le tabelle con **loadtype** uguale a '**incremental**', verranno caricati solo 1 settimana di dati. Questo perché queste tabelle sono molto grandi, quindi a scopo di test abbiamo bisogno solo di una piccola quantità di dati. Dopo che queste tabelle sono state caricate in Lakehouse, **sqlstartdate** verrà aggiornato alla data massima di ciascuna colonna indicata nella colonna sqlsourcedate per ogni tabella. Ciò significa che se esegui nuovamente la pipeline senza reimpostare **sqlenddate**, nessun nuovo dato verrà aggiunto alle tabelle caricate in modo incrementale. Potresti essere tentato di impostare **sqlenddate** su NULL, che è il valore per i carichi pianificati in produzione, ma ti metterei in guardia dal farlo in questa soluzione senza testare la durata del caricamento dal database World Wide Importers a Lakehouse corre. Aggiorna invece **sqlenddate** per aggiungere solo pochi giorni di dati in più dopo l'esecuzione iniziale dei dati di una sola settimana per testare la logica di caricamento incrementale.
 
-You then have the option to complete this end-to-end architecture with Pattern 1 or 2: 
+## Creazione delle risorse di Microsoft Fabric 
+Creazione di un workspace di Fabric, Lakehouses, Data Warehouse, e delle connessioni Azure SQL DB. Quindi bisogna prima creare un workspace di Fabric [Create a Fabric Workspace](https://learn.microsoft.com/en-us/fabric/get-started/create-workspaces) poi passeremo alla creazione di due lakehouse per il livello bronze e gold [Create 2 Microsoft Fabric Lakehouses](https://learn.microsoft.com/en-us/fabric/data-engineering/create-lakehouse) nel workspace. Dopo aver creato il lakehouse copiarsi il riferimento  URLsdelle tabelle come mostra sotto ![getlakehouse](images/get_lakehouse_url.jpg) dovrebbe essere una cosa simile **abfss://\<uniqueid>@onelake.dfs.fabric.microsoft.com/a\<anotheruniqueid>** .
+Successivamente vi sarà la creazione del Fabric Data warehouse seguendo le indicazioni che si vedono nell'immagine sotto [following the instructions here](https://learn.microsoft.com/en-us/fabric/data-warehouse/create-warehouse).
 
-- Pattern 1: Load Data from the Lakehouse to a Star Schema in a Gold Lakehouse
-- Pattern 2: Load Data from the Lakehouse to a Star Schema in a Data Warehouse
+Abbiamo bisogno di un Data Warehouse perchè ,anche se le visualizzazioni possano essere create su Lakehouse in Fabric, queste visualizzazioni non sono esposte nell'attività di copia dati, almeno al momento della stesura di questo documento. Pertanto dobbiamo creare le viste nel Fabric Data Warehouse per entrambi i modelli. 
 
-## Architecture
-### Pattern 1:  End-to-End Metadata Driven Pipeline, From SQL to Lakehouse to Gold Lakehouse
+Prima di proseguire dobbiamo creare una connessione al database Wide World Importers e al FabricMetadataConfiguration seguendo queste istruzioni [per the instructions here](https://learn.microsoft.com/en-us/fabric/data-factory/connector-azure-sql-database).
 
- ![archiecture1](images/pattern1-architecture.jpg)
-### Pattern 2:  End-to-End Metadata Driven Pipeline, From SQL to Lakehouse to Data Warehouse
-
- ![archiecture1](images/pattern2-architecture.jpg)
-## Prerequisites
-* Permissions to create the Azure Resource Group, Azure Storage Account, Azure SQL Server and Azure SQL DBs needed for this tutorial.
-* Permissions to create a Microsoft Fabric Workspace
-* SQL Server Management Studio or Azure Data Studio
-* Basic understanding of creating data pipelines, either from Azure Data Factory, Synapse Analytics or Microsoft Fabric.
-## Create Azure Resources
-Create an Azure Resource Group, Storage Account, and Azure SQL DBs needed for this tutorial.
-### Create an Azure Resource group 
- [Follow the instructions here](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal), if neccessary, to create your resource group.
-### Create an Azure Storage account
-Create a blob storage account in the resource group created in the previous step. [Follow the instructions here](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal), if necessary, to create your blob storage account. This will be used to restore the Wide World Importers database.
-### Create an Azure SQL Server
-1. In the Azure Portal, in **Create a resource**, choose **SQL Server** and click **Create.**
-1. Choose your **Subscription**
-1. Choose you **Resource group** you created in the previous step
-1. Enter a **Server name** - note this must be unique across all azure
-1. Choose your **location**
-1. For authentication method, select **Use both SQL and Microsoft authentication**
-1. Click the **Set admin** button and select your user account
-1. Enter a **Server admin login and password**. Your screen should similar to the one below: ![create-sql-server1](images/create-sqlserver-1.jpg)
-1. Navigate to the **Networking** tab and change the slider under Firewall rules to **Yes** to allow Azure services and resources to access this server.![create-sql-server2](images/create-sqlsserver-2.jpg)
-1. Select **Review + create**
-### Create an Azure SQL DB for Metadata Driven Pipeline Configurations
-1. Go to the Azure SQL Server you created in the previous step and click **Create database**![sqldb1](images/create-sqldb-1.jpg)
-1. Make sure your resource group and SQL server are selected. Enter **FabricMetadataOrchestration** for the database name.
-1. For **Workload environment** Choose **Development**![sqldb2](images/create-sqldb-2.jpg)
-1. Navigate to **Networking** and under **Firewall rules**, move slider for **Add current client IP address** to **Yes** ![sqldb3](images/create-sqldb-3.jpg)
-1. Click **Review and create**
-### Download and restore the Wide World Importers Database
-1. Download the Wide World Importers Database for Azure SQL DB. [Click here to immediately download the bacpac](https://github.com/Microsoft/sql-server-samples/releases/download/wide-world-importers-v1.0/WideWorldImporters-Standard.bacpac)
-1. Upload the bacpac to the storage account created previously and restore the Wide World Importers database. [Follow the instructions here](https://learn.microsoft.com/en-us/azure/azure-sql/database/database-import?view=azuresql&tabs=azure-powershell), if necessary, to restore the database from the bacpac.
-## Create Azure SQL DB Objects
-Run scripts to create views, tables and stored procedures used in this tutorial.
-### Create views in Wide World Importers database
-1. Download the SQL script found in [in this repo](src/sql/1-wwi/create_source_views.sql).
-1. Connect to the Wide World Importers Database in SQL Server Management Studio or Azure Data Studio
-1. Run the script to script to create the views. You should see the following views as shown in Object Explorer below: ![wwiviews](images/metadata-tables-1.jpg)
-### Create and load tables in the Metadata database
-1. Download the SQL script found in [in this repo](src/sql/2-metadatadb/create-metadata-tables.sql)
-1. Connect to the FabricMetadataOrchestration database in SQL Server Management Studio or Azure Data Studio
-1. Run the script to script to create and load the tables. You should see the following tables as shown below: ![tables](images/metadata-tables-2.jpg)
-Notice the values for the **loadtype**, **sqlsourcedatecolumn**, **sqlstartdate**, and **sqlenddate** columns of the **PipelineOrchestrator_FabricLakehouse** table. For the tables with **loadtype** equal to **'incremental'**, only 1 weeks worth of data will be loaded. This is because these tables are very large so for testing purposes, we only need a small amount of data. After these tables are loaded into the Lakehouse, the **sqlstartdate** will be updated to the max date of each column indicated in the **sqlsourcedatecolumn** for each table. This means that if you run the pipeline again without resetting the **sqlenddate**, no new data will be added to the tables that are incrementally loaded. You may be tempted to set the **sqlenddate** to NULL, which is what the value would be for scheduled loads in production, but I would caution you against doing that in this solution without testing how long the load from the World Wide Importers database to the Lakehouse runs. Instead, update the **sqlenddate** to add just a few more days worth of data after the inital run of just one week's data to test the incremental load logic.
-
-## Create Microsoft Fabric Resources
-Create the Microsoft Fabric Workspace, Lakehouses, Data Warehouse, and Azure SQL DB Connections.
-### Create a Microsoft Fabric workspace
-[Create a Fabric Workspace](https://learn.microsoft.com/en-us/fabric/get-started/create-workspaces) in your Microsoft Fabric tenant
-### Create Bronze and Gold Fabric Lakehouses
-[Create 2 Microsoft Fabric Lakehouses](https://learn.microsoft.com/en-us/fabric/data-engineering/create-lakehouse) in you workspace.
-After creating the Lakehouses, copy the lakehouse names and table URLs and keep for your reference. 
-* To get the URLs, open each Lakehouse and click on the ellipses next to the **Tables** folder. Choose **Properties** and copy the abfss file path. ![getlakehouse](images/get_lakehouse_url.jpg)
-* Paste each into notepad or a Word document and remove the "/Tables" from the end of the string. Your string will look something like **abfss://\<uniqueid>@onelake.dfs.fabric.microsoft.com/a\<anotheruniqueid>**
-### Create a Fabric Data Warehouse
-Create a Fabric Data Warehouse by [following the instructions here](https://learn.microsoft.com/en-us/fabric/data-warehouse/create-warehouse).
-
-Both patterns leverage SQL views over Lakehouse tables to load data from the Lakehouse to the Gold Lakehouse or to the Gold Data Warehouse in a Copy Data Activity. While views can be created over Lakehouse Tables in the Fabric Lakehouse, these views are not exposed in the Copy Data Activity, at least as of this writing. Therefore we need to create the views in the Fabric Data Warehouse for both patterns.
-
-### Create Fabric Connections to your Azure SQL DBs
-Create 2 Fabric connections, one to the Wide World Importers Azure SQL DB and to the FabricMetadataConfiguration Azure SQL DB [per the instructions here](https://learn.microsoft.com/en-us/fabric/data-factory/connector-azure-sql-database).
-
-### Upload Spark Notebooks to Fabric
-
-Upload the notebooks to be used in the pipeline
-1. Download the 3 notebooks [found in the repo](src/notebooks/)
-1. Log into the Microsoft Fabric portal and switch to the Data Engineering experience and click **Import notebook**![Import Notebook](images/datascience-import-1.jpg)
-1. Select upload and choose all of the 3 notebooks to your Fabric Workspace. ![downloaded.](images/datascience-import-2.jpg)
+### Caricamento dei Notebooks Spark su Fabric
+1. Scarica i 3 notebooks [found in the repo](src/notebooks/)
+2. **Import notebook**![Import Notebook](images/datascience-import-1.jpg) e poi selezionare i file da caricare ![downloaded.](images/datascience-import-2.jpg)
 
 ## Create Pipelines to Load Data from World Wide Importers to Fabric Lakehouse
 
@@ -351,7 +297,7 @@ Run the Orchestrator pipeline to load the Lakehouse. When it is complete, you sh
 
 Now that we have the tables in our Fabric Lakehouse, we can create SQL views over them which will be used to load our Fabric Gold Lakehouse and/or our Fabric Data Warehouse.
 
-## Create Data Warehouse Views
+## Create Silver Layer with View
 If you read the original blog posts, you would know that at this point in time the Lakehouse SQL Endpoint is not exposed in the Copy Data pipeline activity. So while you can build SQL views in the Lakehouse, you can not leverage them in a Copy Data activity. Therefore, we will create the SQL Views in the Fabric Data Warehouse.
 1. Download the Datawarehouse SQL script file [located here](src/fabricdw/create-fabric-dw-views.sql).
 1. Open the downloaded SQL script (create-fabric-dw-views.sql) using notepad and copy the entire contents of the script.
@@ -363,7 +309,7 @@ If you read the original blog posts, you would know that at this point in time t
 
 Now the decision is yours: Do you want to build your Gold Layer/Star Schema in another Fabric Lakehouse ala Pattern 1? Or does the Fabric Data Warehouse better suit your needs?
 
-## Build Star Schema
+## Build Gold Layer
 Choose one of the 2 patterns to complete your end-to-end architecture:
-### [Pattern 1: Build Star Schema in Fabric Lakehouse](/Fabric/src/deployment/Pattern1and2/PATTERN1_LAKEHOUSE.md)
-### [Pattern 2: Build Star Schema in Fabric Data Warehouse](/Fabric/src/deployment/Pattern1and2/PATTERN2_DATAWAREHOUSE.md)
+### [Pattern 1: Build Gold Layer (Star Schema) in Fabric Lakehouse](/2024/DataSaturday48/Pattern1.md)
+### [Pattern 2: Build Gold Layer (Star Schema) in Fabric Data Warehouse](/2024/DataSaturday48/Pattern2.md)
