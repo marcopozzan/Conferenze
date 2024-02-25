@@ -165,8 +165,8 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
         | Settings | Script          | Radio Button | NonQuery                        |
         | Settings | Script          | Dynamic Content  | Update dbo.PipelineOrchestrator_FabricLakehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{activity('Copy data to delta table').output.executionDetails[0].status}', rowsread = @{activity('Copy data to delta table').output.rowsRead}, rowscopied= @{activity('Copy data to delta table').output.rowsCopied}, deltalakeinserted = '@{variables('rowsinserted')}', deltalakeupdated =0, sqlmaxdatetime = '@{variables('maxdate')}', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}' where sqlsourceschema = '@{pipeline().parameters.sqlsourceschema}' and sqlsourcetable = '@{pipeline().parameters.sqlsourcetable}' |
     1. Exit the **True activities** box of the **If condition** by clicking on  **Main canvas** in the upper left corner
-1. Now configure the **If False** activities. Your False activities will be a flow of activities when the table to be loaded should be an incremental load. When completed, the False activities will look like this: ![wwi-incremental](images/wwi-incremental-activities.jpg)
-    1. Add **Copy Data** activity:
+9. Now configure the **If False** activities. Your False activities will be a flow of activities when the table to be loaded should be an incremental load. When completed, the False activities will look like this: ![wwi-incremental](images/wwi-incremental-activities.jpg)
+    9.1. Aggiungere attività **Copy Data**:
         | Tab     | Configuration   | Value Type   | Value                           |
         | ------- | --------------- | ------------ | ------------------------------- |
         | General | Name            | String       | Copy data to parquet            |
@@ -182,7 +182,7 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
         | Destination  | File Path (1)  | Dynamic Content | incremental/@{pipeline().parameters.sinktablename} |
         | Destination  | File Path (2)  | Dynamic Content | @{pipeline().parameters.sinktablename}.parquet |
         | Destination  | File format      | Drop down | Parquet |
-    1. Add **Notebook** activity, drag the green arrow from previous activity and configure:
+    9.2. Aggiungere attività **Notebook** e configuralo come segue:
         | Tab      | Configuration               | Add New Parameter | Value Type         | Value                                      |
         | -------- | --------------------------- | ----------------- | ------------------ | ------------------------------------------ |
         | General  | Settings                    |                   | String             | Load to Delta                              |
