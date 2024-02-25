@@ -344,8 +344,7 @@ Una volta completata questa pipeline, sarà simile a questa: ![lakehousetable](i
     | General    | Name          | String             | Check loadtype                                 |
     | Activities | Expression    | Dynamic Content | @equals(pipeline().parameters.loadtype,'full') |
 7.Ora configura  l' **If True** . Quando sarà completato comparirà così:![lakehouse-true](images/load-lakehouse-full.jpg)
-    1. Aggiungere una attività di  **Copy Data** e configurarla come segue:
-    
+    1. Aggiungere una attività di  **Copy Data** e configurarla come segue: 
         | Tab         | Configuration             | Value Type         | Value                               |
         | ----------- | ------------------------- | ------------------ | ----------------------------------- |
         | General     | Name                      | String             | Copy data to gold lakehouse         |
@@ -376,6 +375,7 @@ Una volta completata questa pipeline, sarà simile a questa: ![lakehousetable](i
         | Settings | Connection      | Dropdown     | Connection to FabricMetdataOrchestration Database |
         | Settings | Script(1)       | Radio Button | NonQuery                                          |
         | Settings | Script(2)       | Dynamic Content | Update dbo.PipelineOrchestrator_FabricLakehouseGold set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{activity('Copy data to gold lakehouse').output.executionDetails[0].status}',  rowscopied= @{activity('Copy data to gold lakehouse').output.rowsCopied},deltalakeinserted= @{activity('Copy data to gold lakehouse').output.rowsCopied}, rowsread= @{activity('Copy data to gold lakehouse').output.rowsRead}, pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}' where sourceschema = '@{pipeline().parameters.sourceschema}' and sourcetable = '@{pipeline().parameters.sourcetable}'  |
+       
 1. Ora configura la parte dell'**If False**. Alla fine della configurazione dovrà essere come questa immagine: ![table-l=incremental](images/load-lakehouse-incr.jpg)
 
     1. Aggiungere una attività **Set variable** e configurarla come segue:
@@ -501,12 +501,11 @@ Scarica il file di script SQL del datawarehouse [posizionati qui](src/fabricdw/c
 ![dw-views](images/dw-objects.jpg)
 
 ## Crea la pipeline da caricare da Fabric Lakehouse al Gold Data Warehouse
-
 Una volta completata la pipeline, apparirà così: ![gold-dw-tables](images/golddw-tables.jpg)
 
-1. Create a new Data Pipeline called **Load Warehouse Table**
-1. Add a **Set Variable** activity
-1. Click on the canvas and create the following **Parameters**:
+1. Crea una nuova pipeline di dati chiamata **Load Warehouse Table**
+1. Aggiungi attività di **Set Variable** 
+1. Configurare i **Parameters**:
     | Name              | Type   |
     | ----------------- | ------ |
     | sourcestartdate   | String |
@@ -520,25 +519,25 @@ Una volta completata la pipeline, apparirà così: ![gold-dw-tables](images/gold
     | sinktable         | String |
     | storedprocschema  | String |
     | storedprocname    | String |
-1. Add the following pipeline **Variables**:
+1. Aggiungi le **Variables**:
     | Name              | Type   |
     | ----------------- | ------ |
     | pipelinestarttime | String |
     | pipelineendtime   | String |
-1. Configure the **Set variable** activity created in step 2:
+1. Configura l'attività **Set variable** creata nello step 2:
     | Tab      | Configuration | Value type         | Value                 |
     | -------- | ------------- | ------------------ | --------------------- |
     | General  | Name          | String             | Set pipelinestarttime |
     | Settings | Variable type | Radio Button       | Pipeline variable     |
     | Settings | Name          | String             | pipelinestarttime     |
     | Settings | Value         | Dynamic Content | @utcnow()             |
-1. Add **If condition** activity, drag the green arrow from the previous activity to it and configure:
+1. Aggiungi l'attività **If condition** e configurala come segue:
     | Tab        | Configuration | Value type         | Value                                          |
     | ---------- | ------------- | ------------------ | ---------------------------------------------- |
     | General    | Name          | String             | Check loadtype                                 |
     | Activities | Expression    | Dynamic Content | @equals(pipeline().parameters.loadtype,'full') |
-1. Now configure the **If True** activities. Like the previous pipelines, the True activities will be a flow of activities when the table to be loaded should be a full load. When completed, the True activities will look like this:![dw-true](images/dw-full.jpg)
-    1. Add **Copy Data** activity and configure:
+1. Ora configura la parte **If True**. Come le pipeline precedenti, le attività True saranno un flusso di attività quando la tabella da caricare dovrebbe essere full. Una volta completate, le attività reali appariranno così:![dw-true](images/dw-full.jpg)
+    1. Aggiungere attività **Copy Data** e la configuriamo come segue:
         | Tab         | Configuration               | Value Type         | Value                                                                              |
         | ----------- | --------------------------- | ------------------ | ---------------------------------------------------------------------------------- |
         | General     | Name                        | String             | Copy data to warehouse                                                             |
@@ -555,14 +554,14 @@ Una volta completata la pipeline, apparirà così: ![gold-dw-tables](images/gold
         | Destination | Table (Schema)              | Dynamic Content | @pipeline().parameters.sinkschema                                                  |
         | Destination | Table (Table name)          | Dynamic Content | @pipeline().parameters.sinktable                                                   |
         | Destination | Advanced -> Pre-copy Script | Dynamic Content | DELETE FROM @{pipeline().parameters.sinkschema}.@{pipeline().parameters.sinktable} |
-    1. Add **Set variable** activity, drag the green arrow from the previous activity to it and configure:
+    1. Aggiugnere una attività **Set variable** e configurala come segue:
         | Tab      | Configuration | Value Type         | Value                |
         | -------- | ------------- | ------------------ | -------------------- |
         | General  | Name          | String             | Set pipeline endtime |
         | Settings | Variable type | Radio Button       | Pipeline variable    |
         | Settings | Name          | Dropdown           | pipelineendtime      |
         | Settings | Value         | Dynamic Content | @utcnow()            |
-    1. Add **Script** activity, drag the green arrow from the previous activity to it and configure:
+    1. Aggiugnere una attività di **Script** e configurala come segue:
        | Tab      | Configuration   | Value Type   | Value                                             |
        | -------- | --------------- | ------------ | ------------------------------------------------- |
        | General  | Name            | String       | Update Pipeline Run details                       |
@@ -570,8 +569,7 @@ Una volta completata la pipeline, apparirà così: ![gold-dw-tables](images/gold
        | Settings | Connection      | Dropdown     | Connection to FabricMetdataOrchestration Database |
        | Settings | Script(1)       | Radio Button | NonQuery                                          |
        | Settings | Script(2)       | Dynamic Content  | Update dbo.PipelineOrchestrator_FabricWarehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{activity('Copy data to warehouse').output.executionDetails[0].status}',  rowsinserted= @{activity('Copy data to warehouse').output.rowsCopied}, rowsupdated=0, pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}' where sourceschema = '@{pipeline().parameters.sourceschema}' and sourcetable = '@{pipeline().parameters.sourcetable}'   |
-    1. Exit the **True activities** box of the **If condition** by clicking on  **Main canvas** in the upper left corner
-1. Now configure the **If False** activities. Your False activities will be a flow of activities when the table to be loaded should be an incremental load. When completed, the False activities will look like this: ![dw-incremental](images/dw-false.jpg)
+1. Ora configura la parte **If False**. Una volta completate, le attività false appariranno così: ![dw-incremental](images/dw-false.jpg)
     1. Add **Lookup** activity and configure:
         | Tab      | Configuration               | New parameter name | Paramater Type | Value Type         | Value                                                                             |
         | -------- | --------------------------- | ------------------ | -------------- | ------------------ | --------------------------------------------------------------------------------- |
