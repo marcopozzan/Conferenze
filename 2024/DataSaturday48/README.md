@@ -241,18 +241,18 @@ Per eseguire la pipeline, creeremo una pipeline Orchestrator. Una pipeline Orche
    | loadgoldlh | int  | 1             | Set to 1 if you want to load to Fabric Gold Lakehouse   |
    | loadbronze | int  | 1             | Set to 1 if you want to load to Fabric Bronze Lakehouse |
    | waittime | int  | 300            | Delay needed for tables to materialize in Bronze Lakehouse before loading to DW or Gold LH. Can set to 1 if not loading Bronze or only loading to Bronze |
-1. Add pipeline **Variables**
+1. Aggiungi delle  **Variables** delle pipeline
    | Name              | Type   |
    | ----------------- | ------ |
    | batchloaddatetime | String |
-1. Go back to the **Set variable** activity you added in step 2 and configure:
+1.Ritornare nella attività dello step 2 cioè **Set variable** e configurarla come segue:
    | Tab      | Configuration | Value Type         | Value                   |
    | -------- | ------------- | ------------------ | ----------------------- |
    | General  | Name          | String             | set batch load datetime |
    | Settings | Variable type | Radio Button       | Pipeline variable       |
    | Settings | Name          | Dropdown           | batchloaddatetime       |
    | Settings | Value         | Dynamic Content | @pipeline().TriggerTime |
-1. Add **Lookup** activity, drag the green arrow from the previous activity to it and configure:
+1. Aggiungi una attività di  **Lookup** e configurarla come segue:
    | Tab      | Configuration   | Value Type   | Value                                |
    | -------- | --------------- | ------------ | ------------------------------------ |
    | General  | Name            | String       | Get tables to load to deltalake      |
@@ -262,14 +262,14 @@ Per eseguire la pipeline, creeremo una pipeline Orchestrator. Una pipeline Orche
    | Settings | Use query       | Radio button | Query                                |
    | Settings | Query       | Dynamic Content |select * from dbo.PipelineOrchestrator_FabricLakehouse where skipload=0 and 1=@{pipeline().parameters.loadbronze} |
    | Settings | First row only      | Check box | Not Checked                                |
-1. Add **For each** activity, drag the green arrow from the previous activity to it and configure:
+1. Aggiungi una attività di **For each** e configurarla come segue:
    | Tab        | Configuration | Value Type                                    | Value                                                     |
    | ---------- | ------------- | --------------------------------------------- | --------------------------------------------------------- |
    | General    | Name          | String                                        | For each table to load to deltalake                       |
    | Settings   | Batch count   | String                                        | 4                                                         |
    | Settings   | Items         | Dynamic Content                            | @activity('Get tables to load to deltalake').output.value |
                                                         
-1. Click on the pencil in the **Activities** box of the **For Each** and add an **Invoke Pipeline** activity and configure as follows:
+1. Clicchiamo sulla matitina della **Activities** nel blocco **For Each** e aggiungi una attività di  **Invoke Pipeline** configurata come segue:
    | Tab      | Configuration      | Parameter Name      | Value Type         | Value                           |
    | -------- | ------------------ | ------------------- | ------------------ | ------------------------------- |
    | General  | Name               |                     | String             | Get WWImporters Data            |
@@ -284,8 +284,7 @@ Per eseguire la pipeline, creeremo una pipeline Orchestrator. Una pipeline Orche
    | Settings | Parameters         | loadtype            | Dynamic Content | @item().loadtype                |
    | Settings | Parameters         | sourcekeycolumn     | Dynamic Content | @item().sourcekeycolumn         |
    | Settings | Parameters         | batchloaddatetime   | Dynamic Content | @variables('batchloaddatetime') |
-1. Exit the **Activities** box in the For each activity by clicking on  **Main canvas** in the upper left corner
-1. On the Main Canvas, add **Notebook** activity, drag the green arrow from the **For each** activity to it and configure:
+1. Nella finestra principale aggiungi una attività di **Notebook** e configurala come segue:
    | Tab      | Configuration   | Add New Parameter | Parameter Type | Value Type         | Value                            |
    | -------- | --------------- | ----------------- | -------------- | ------------------ | -------------------------------- |
    | General  | Name            |                   |                | String             | Build Calendar                   |
@@ -294,23 +293,18 @@ Per eseguire la pipeline, creeremo una pipeline Orchestrator. Una pipeline Orche
    | Settings | Base parameters | endyear           | int            | Dynamic Content | @pipeline().parameters.endyear   |
    | Settings | Base parameters | lakehousePath     | String         |String  | \<enter your Bronze Lakehouse abfss path>          |
 
-Run the Orchestrator pipeline to load the Lakehouse. When it is complete, you should see the following tables and files in your Lakehouse: ![lakehouse-tables1](images/lakehouse-tables-1.jpg)
+Eseguire la pipeline Orchestrator per caricare Lakehouse. Una volta completato, dovresti vedere le seguenti tabelle e file nella tua Lakehouse: ![lakehouse-tables1](images/lakehouse-tables-1.jpg)
 
-Now that we have the tables in our Fabric Lakehouse, we can create SQL views over them which will be used to load our Fabric Gold Lakehouse and/or our Fabric Data Warehouse.
-
-## Create Silver Layer with View
-If you read the original blog posts, you would know that at this point in time the Lakehouse SQL Endpoint is not exposed in the Copy Data pipeline activity. So while you can build SQL views in the Lakehouse, you can not leverage them in a Copy Data activity. Therefore, we will create the SQL Views in the Fabric Data Warehouse.
-1. Download the Datawarehouse SQL script file [located here](src/fabricdw/create-fabric-dw-views.sql).
+## Creazione del Silver Layer con le View
+1. Scarica il file di script SQL del datawarehouse [caricato da qui](src/fabricdw/create-fabric-dw-views.sql).
 1. Open the downloaded SQL script (create-fabric-dw-views.sql) using notepad and copy the entire contents of the script.
-1. From the Fabric portal, go to your Fabric Workspace and open your Data Warehouse and [create a new Query](https://learn.microsoft.com/en-us/fabric/data-warehouse/query-warehouse).
-1. Paste the code into the Fabric Data Warehouse query.
-1. Do a Find and Replace **[Ctrl-H]** and replace the text **myFTAFabricWarehouse** with your Fabric Warehouse name.
-1. Do another Find and Replace and replace the text **myFTAFabricLakehouse** with your Fabric Lakehouse name.
-1. Run the SQL query script. After running the script, you should see the following views in the Silver schema of your Fabric Data Warehouse  ![dw-views](images/dw-views.jpg)
+1. Dal portale Fabric, vai al tuo Fabric Workspace e apri il tuo Data Warehouse e [crea una nuova query](https://learn.microsoft.com/en-us/fabric/data-warehouse/query-warehouse).
+1. Incolla il codice nella query Fabric Data Warehouse.
+1. Esegui Trova e sostituisci **[Ctrl-H]** e sostituisci il testo  **myFTAFabricWarehouse** con il nome del vostro Fabric Warehouse.
+1. Fai un altro Trova e sostituisci e sostituisci il testo **myFTAFabricLakehouse** con il nome del Fabric Lakehouse.
+1. Esegui lo script della query SQL. Dopo aver eseguito lo script, dovresti vedere le seguenti view nello schema Silver del tuo Fabric Data Warehouse  ![dw-views](images/dw-views.jpg)
 
-Now the decision is yours: Do you want to build your Gold Layer/Star Schema in another Fabric Lakehouse ala Pattern 1? Or does the Fabric Data Warehouse better suit your needs?
-
-## Build Gold Layer
+## Costruire il Gold Layer
 Choose one of the 2 patterns to complete your end-to-end architecture:
 ### [Pattern 1: Build Gold Layer (Star Schema) in Fabric Lakehouse](/2024/DataSaturday48/Pattern1.md)
 ### [Pattern 2: Build Gold Layer (Star Schema) in Fabric Data Warehouse](/2024/DataSaturday48/Pattern2.md)
