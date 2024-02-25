@@ -343,9 +343,9 @@ Una volta completata questa pipeline, sarà simile a questa: ![lakehousetable](i
     | ---------- | ------------- | ------------------ | ---------------------------------------------- |
     | General    | Name          | String             | Check loadtype                                 |
     | Activities | Expression    | Dynamic Content | @equals(pipeline().parameters.loadtype,'full') |
-7.Ora configura  l' **If True** .
+7.Ora configura  il ramo **If True** .
 Quando sarà completato comparirà così:![lakehouse-true](images/load-lakehouse-full.jpg)
-    1. Aggiungere una attività di  **Copy Data** e configurarla come segue: 
+   1. Aggiungere una attività di  **Copy Data** e configurarla come segue: 
         | Tab         | Configuration             | Value Type         | Value                               |
         | ----------- | ------------------------- | ------------------ | ----------------------------------- |
         | General     | Name                      | String             | Copy data to gold lakehouse         |
@@ -361,14 +361,14 @@ Quando sarà completato comparirà così:![lakehouse-true](images/load-lakehouse
         | Destination | Root folder               | Radio Button       | Tables                              |
         | Destination | Table (Table name)        | Dynamic Content | @pipeline().parameters.sinktable    |
         | Destination | Advanced -> Table action  | Radio Button       | Overwrite                           |
-    1. Aggungere una attività di **Set variable** e configurarla come segue:
+   1. Aggungere una attività di **Set variable** e configurarla come segue:
         | Tab      | Configuration | Value Type         | Value                |
         | -------- | ------------- | ------------------ | -------------------- |
         | General  | Name          | String             | Set pipeline endtime |
         | Settings | Variable type | Radio Button       | Pipeline variable    |
         | Settings | Name          | Dropdown           | pipelineendtime      |
         | Settings | Value         | Dynamic Content | @utcnow()            |
-    1. Aggiungere una attività di **Script** e configurarla come segue:
+   1. Aggiungere una attività di **Script** e configurarla come segue:
         | Tab      | Configuration   | Value Type   | Value                                             |
         | -------- | --------------- | ------------ | ------------------------------------------------- |
         | General  | Name            | String       | Update Pipeline Run details                       |
