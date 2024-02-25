@@ -1,0 +1,87 @@
+spark.conf.set("spark.sql.parquet.vorder.enabled", "true")
+spark.conf.set("spark.microsoft.delta.optimizeWrite.enabled", "true")
+#spark.conf.set("spark.microsoft.delta.optimizeWrite.binSize", "1073741824")
+    
+
+#Tabella DeliveryMethods
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/DeliveryMethods.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_DeliveryMethods ")
+
+#Tabella People
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/People.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_People")
+
+#Tabella StateProvinces
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/StateProvinces.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_StateProvinces")
+
+
+#Tabella Suppliers
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/Suppliers.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_Suppliers")
+
+
+#Tabella PurchasingSuppliersCategories
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/SupplierCategories.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_SupplierCategories")
+
+#Tabella BuyingGroups
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/BuyingGroups.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_SalesBuyingGroups")
+
+#Tabella CustomerCategories
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/CustomerCategories.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_CustomerCategories")
+
+#Tabella Customers
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/Customers.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_Customers")
+
+#Tabella Colors
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/Colors.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_Colors")
+
+#Tabella PackageTypes
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/PackageTypes.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_PackageTypes")
+
+#Tabella StockItems
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/StockItems.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_StockItems")
+
+#Tabella StockItems
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/Suppliers.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_Suppliers")
+
+#Tabella Sales Order
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/SalesOrder/*/*.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_SalesOrder")
+
+#Tabella Sales Order line
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/SalesOrderLine/*/*.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_SalesOrderLine")
+
+#Tabella Date
+df = spark.read.format("csv").option("delimiter", "|").option("header","true").load('Files/Ext_BronzeData/Date.csv')
+df.write.mode("overwrite").format("delta").saveAsTable("silver_Date")
+
+
+
+_______________________________________________________________________________
+spark.sql('drop table silver_Cities')
+spark.sql('drop table silver_Countries')
+spark.sql('drop table silver_DeliveryMethods')
+spark.sql('drop table silver_People')
+spark.sql('drop table silver_StateProvinces')
+spark.sql('drop table silver_Categories')
+spark.sql('drop table silver_SupplierCategories')
+spark.sql('drop table silver_SalesBuyingGroups')
+spark.sql('drop table silver_CustomerCategories')
+spark.sql('drop table silver_Customers')
+spark.sql('drop table silver_Colors')
+spark.sql('drop table silver_PackageTypes')
+spark.sql('drop table silver_StockItems')
+spark.sql('drop table silver_SalesOrder')
+spark.sql('drop table silver_SalesOrderLine')
+spark.sql('drop table silver_Date')
+spark.sql('drop table silver_Suppliers')
