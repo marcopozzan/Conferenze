@@ -309,8 +309,8 @@ Eseguire la pipeline Orchestrator per caricare Lakehouse. Una volta completato, 
 Una volta completata questa pipeline, sarà simile a questa: ![lakehousetable](images/load-lakehouse-pipeline.jpg)
 
 1. Crea una nuova pipeline di dati chiamata **Load Lakehouse Table**
-1. Aggiungere una attività di **Set Variable**
-1. Fare clic sulla tela e creare quanto segue **Parameters**:
+2. Aggiungere una attività di **Set Variable**
+3. Fare clic sulla tela e creare quanto segue **Parameters**:
     | Name              | Type   |
     | ----------------- | ------ |
     | sourcestartdate   | String |
@@ -322,7 +322,7 @@ Una volta completata questa pipeline, sarà simile a questa: ![lakehousetable](i
     | sinktable         | String |
     | tablekey          | String |
     | tablekey2         | String |
-1. Aggiungere le **Variables** della pipeline:
+4. Aggiungere le **Variables** della pipeline:
     | Name              | Type   |
     | ----------------- | ------ |
     | datepredicate     | String |
@@ -331,20 +331,19 @@ Una volta completata questa pipeline, sarà simile a questa: ![lakehousetable](i
     | rowsupdated       | String |
     | pipelinestarttime | String |
     | pipelineendtime   | String |
-1. Configurare l'attività **Set variable** aggiunta nel passo 2:
-     Tab      | Configuration | Value type         | Value                 |
+5. Configurare l'attività **Set variable** aggiunta nel passo 2:
+    | Tab      | Configuration | Value type         | Value                 |
     | -------- | ------------- | ------------------ | --------------------- |
     | General  | Name          | String             | Set pipelinestarttime |
     | Settings | Variable type | Radio Button       | Pipeline variable     |
     | Settings | Name          | String             | pipelinestarttime     |
     | Settings | Value         | Dynamic Content | @utcnow()             |
-1. Aggiungere una attività di **If condition** e confiurala come segue:
+6. Aggiungere una attività di **If condition** e confiurala come segue:
     | Tab        | Configuration | Value type         | Value                                          |
     | ---------- | ------------- | ------------------ | ---------------------------------------------- |
     | General    | Name          | String             | Check loadtype                                 |
     | Activities | Expression    | Dynamic Content | @equals(pipeline().parameters.loadtype,'full') |
-1.Ora configura  l' **If True** . Quando sarà completato comparirà così:![lakehouse-true](images/load-lakehouse-full.jpg)
-
+7.Ora configura  l' **If True** . Quando sarà completato comparirà così:![lakehouse-true](images/load-lakehouse-full.jpg)
     1. Aggiungere una attività di  **Copy Data** e configurarla come segue:
     
         | Tab         | Configuration             | Value Type         | Value                               |
@@ -448,7 +447,6 @@ Una volta completata questa pipeline, sarà simile a questa: ![lakehousetable](i
         | Settings | Connection      | Dropdown     | Connection to FabricMetdataOrchestration Database |
         | Settings | Script(1)       | Radio Button | NonQuery                                          |
         | Settings | Script(1)       | Dynamic Content | Update dbo.PipelineOrchestrator_FabricLakehouseGold set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{activity('Get incremental fact data').output.executionDetails[0].status}', rowsread = @{activity('Get incremental fact data').output.rowsRead}, rowscopied= @{activity('Get incremental fact data').output.rowsCopied},deltalakeinserted = '@{variables('rowsinserted')}',deltalakeupdated = '@{variables('rowsupated')}', sinkmaxdatetime = '@{variables('maxdate')}', sourcestartdate = '@{variables('maxdate')}', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}'  where sourceschema = '@{pipeline().parameters.sourceschema}' and sourcetable = '@{pipeline().parameters.sourcetable}'|
-    1. Exit the **False activities** box of the **If condition** by clicking on  **Main canvas** in the upper left corner
 
 ## Configurazione della pipeline che fa da orchestrator
 Ora dobbiamo modificare la pipeline che fa da Orchestrator, **orchestrator Load WWI to Fabric**. Una volta terminato, la pipeline dovrebbe assomigliare a questa: ![orchestrator-part2](images/orchestrator-2.jpg)
@@ -473,7 +471,7 @@ Ora dobbiamo modificare la pipeline che fa da Orchestrator, **orchestrator Load 
     | ---------- | ------------- | --------------------------------------------- | -------------------------------------------------------------- |
     | General    | Name          | String                                        | For each table to load to gold lakehouse                       |
     | Settings   | Items         | Dynamic Content                            | @activity('Get tables to load to gold lakehouse').output.value |
-1.Clicca nella matita dell'attività **Activities** nel blocco **For Each** e aggiungi una attività di **Invoke Pipeline** e configurala come segue:
+1. Clicca nella matita dell'attività **Activities** nel blocco **For Each** e aggiungi una attività di **Invoke Pipeline** e configurala come segue:
     | Tab      | Configuration      | Parameter Name    | Value Type         | Value                           |
     | -------- | ------------------ | ----------------- | ------------------ | ------------------------------- |
     | General  | Name               |                   | String             | Invoke Load Gold Lakehouse      |
