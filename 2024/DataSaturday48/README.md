@@ -305,7 +305,7 @@ Eseguire la pipeline Orchestrator per caricare Lakehouse. Una volta completato, 
 1. Esegui lo script della query SQL. Dopo aver eseguito lo script, dovresti vedere le seguenti view nello schema Silver del tuo Fabric Data Warehouse  ![dw-views](images/dw-views.jpg)
 
 ## Costruire il Gold Layer con il primo pattern (lakehouse)
-## Create the pipeline to load data from Fabric Lakehouse to Gold Fabric Lakehouse
+## Crea la pipeline per caricare i dati da bronze Lakehouse a Gold Lakehouse
 Una volta completata questa pipeline, sarà simile a questa: ![lakehousetable](images/load-lakehouse-pipeline.jpg)
 
 1. Crea una nuova pipeline di dati chiamata **Load Lakehouse Table**
@@ -343,7 +343,8 @@ Una volta completata questa pipeline, sarà simile a questa: ![lakehousetable](i
     | ---------- | ------------- | ------------------ | ---------------------------------------------- |
     | General    | Name          | String             | Check loadtype                                 |
     | Activities | Expression    | Dynamic Content | @equals(pipeline().parameters.loadtype,'full') |
-7.Ora configura  l' **If True** . Quando sarà completato comparirà così:![lakehouse-true](images/load-lakehouse-full.jpg)
+7.Ora configura  l' **If True** .
+Quando sarà completato comparirà così:![lakehouse-true](images/load-lakehouse-full.jpg)
     1. Aggiungere una attività di  **Copy Data** e configurarla come segue: 
         | Tab         | Configuration             | Value Type         | Value                               |
         | ----------- | ------------------------- | ------------------ | ----------------------------------- |
