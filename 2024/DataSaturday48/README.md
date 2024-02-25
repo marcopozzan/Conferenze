@@ -2,26 +2,21 @@
 
 ## Description
 
-Metadata-driven pipelines in Azure Data Factory, Synapse Pipelines, and now, Microsoft Fabric, give you the capability to ingest and transform data with less code, reduced maintenance and greater scalability than writing code or pipelines for every data source entity that needs to be ingested and transformed. The key lies in identifying the data loading and transformation pattern(s) for your data sources and destinations and then building the framework to support each pattern.
+Le pipeline basate sui metadati in Azure Data Factory, Synapse Pipelines e ora in Microsoft Fabric ti offrono la possibilità di inserire e trasformare i dati con meno codice, manutenzione ridotta e maggiore scalabilità rispetto alla scrittura di codice o pipeline per ogni entità di origine dati che deve essere ingerito e trasformato. La chiave sta nell'identificare i modelli di caricamento e trasformazione dei dati per le origini e le destinazioni dei dati e quindi creare la struttura per supportare ciascun modello.
 
-## Create Azure Resources
-Create an Azure Resource Group, Storage Account, and Azure SQL DBs needed for this tutorial.
-### Create an Azure Resource group 
- [Follow the instructions here](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal), if neccessary, to create your resource group.
-### Create an Azure Storage account
-Create a blob storage account in the resource group created in the previous step. [Follow the instructions here](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal), if necessary, to create your blob storage account. This will be used to restore the Wide World Importers database.
-### Create an Azure SQL Server
-1. In the Azure Portal, in **Create a resource**, choose **SQL Server** and click **Create.**
-1. Choose your **Subscription**
-1. Choose you **Resource group** you created in the previous step
-1. Enter a **Server name** - note this must be unique across all azure
-1. Choose your **location**
-1. For authentication method, select **Use both SQL and Microsoft authentication**
-1. Click the **Set admin** button and select your user account
-1. Enter a **Server admin login and password**. Your screen should similar to the one below: ![create-sql-server1](images/create-sqlserver-1.jpg)
-1. Navigate to the **Networking** tab and change the slider under Firewall rules to **Yes** to allow Azure services and resources to access this server.![create-sql-server2](images/create-sqlsserver-2.jpg)
-1. Select **Review + create**
-### Create an Azure SQL DB for Metadata Driven Pipeline Configurations
+## Creare le Azure Resource
+Creare un Azure Resource Group, un Storage Account e l'Azure SQL DBs necessario. 
+### Creare un Azure Resource group 
+
+Se necessario, per creare il gruppo di risorse.
+### Creare un Azure Storage account
+Create un blob storage account nel resource group creato prima. Questo verrà utilizzato per ripristinare il database Wide World Importers.
+
+### Creare un Azure SQL Server
+La schermata dovrebbe essere simile a quella qui sotto: ![create-sql-server1](images/create-sqlserver-1.jpg)
+Andre sulla tab del  **Networking**  e modificare le Regole firewall in **Yes** per consentire ai servizi e alle risorse di Azure di accedere a questo server.![create-sql-server2](images/create-sqlsserver-2.jpg)
+
+### Crea un Azure SQL DB per le configurazione della Metadata Driven Pipeline
 1. Go to the Azure SQL Server you created in the previous step and click **Create database**![sqldb1](images/create-sqldb-1.jpg)
 1. Make sure your resource group and SQL server are selected. Enter **FabricMetadataOrchestration** for the database name.
 1. For **Workload environment** Choose **Development**![sqldb2](images/create-sqldb-2.jpg)
