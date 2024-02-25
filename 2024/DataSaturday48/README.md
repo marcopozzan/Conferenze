@@ -72,7 +72,7 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
 
 4.Spostati sulle  **Variables** come scheda e aggiungi le seguenti variabili: 
 
-    | Name              | Type   |
+      Name              | Type   |
     | ----------------- | ------ |
     | datepredicate     | String |
     | maxdate           | String |
@@ -107,7 +107,7 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
    
 8. Ora configura la parte dell' **If True**. Una volta completate, le attività di configurazione apparira così: ![full-load](images/wwi-fullload-activities.jpg)
        8.1. Aggiungi una attività di **Copy Data**  e configurala così:
-        | Tab     | Configuration   | Value Type   | Value                           |
+          Tab     | Configuration   | Value Type   | Value                           |
         | ------- | --------------- | ------------ | ------------------------------- |
         | General | Name            | String       | Copy data to delta table        |
         | Source  | Data store type | Radio button | External                        |
@@ -122,7 +122,6 @@ Questa pipeline verrà chiamata da una pipeline Orchestrator per caricare una ta
         | Destination | Table name                | Dynamic Content | @pipeline().parameters.sinktablename |
         | Destination | Advanced-> Table action   | Radio button       | Overwrite                            | 
     8.2.  Aggiungi una attività di **Notebook** e configurala così:
-   
         | Tab      | Configuration               | Add New Parameter | Value Type         | Value                                      |
         | -------- | --------------------------- | ----------------- | ------------------ | ------------------------------------------ |
         | General  | Settings                    |                   | String             | Get MaxDate loaded                         |
