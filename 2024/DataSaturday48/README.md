@@ -300,8 +300,8 @@ Eseguire la pipeline Orchestrator per caricare Lakehouse. Una volta completato, 
 1. Open the downloaded SQL script (create-fabric-dw-views.sql) using notepad and copy the entire contents of the script.
 1. Dal portale Fabric, vai al tuo Fabric Workspace e apri il tuo Data Warehouse e [crea una nuova query](https://learn.microsoft.com/en-us/fabric/data-warehouse/query-warehouse).
 1. Incolla il codice nella query Fabric Data Warehouse.
-1. Esegui Trova e sostituisci **[Ctrl-H]** e sostituisci il testo  **myFTAFabricWarehouse** con il nome del vostro Fabric Warehouse.
-1. Fai un altro Trova e sostituisci e sostituisci il testo **myFTAFabricLakehouse** con il nome del Fabric Lakehouse.
+1. Sostituisci il nome del vostro Fabric Warehouse.
+1. Sostituisci il nome del vostro Fabric Lakehouse.
 1. Esegui lo script della query SQL. Dopo aver eseguito lo script, dovresti vedere le seguenti view nello schema Silver del tuo Fabric Data Warehouse  ![dw-views](images/dw-views.jpg)
 
 ## Costruire il Gold Layer con il primo pattern (lakehouse)
@@ -499,8 +499,8 @@ Scarica il file di script SQL del datawarehouse [posizionati qui](src/fabricdw/c
 1. Apri lo script SQL scaricato (create-fabric-dw-objects.sql) utilizzando il blocco note e copia l'intero contenuto dello script.
 1. Dal portale Fabric, vai al tuo Fabric Workspace e apri il tuo Data Warehouse e [crei una nuova query](https://learn.microsoft.com/en-us/fabric/data-warehouse/query-warehouse).
 1. Incolla il codice nella query Fabric Data Warehouse.
-1. Esegui Trova e sostituisci **[Ctrl-H]** e sostituisci il testo **myFTAFabricWarehouse** con il nome Fabric Warehouse.
-1. Fai un altro Trova e sostituisci e sostituisci il testo **myFTAFabricLakehouse** con il nome del Fabric Lakehouse.
+1. Sostituisci il nome Fabric Warehouse.
+1. Sostituisci il nome del Fabric Lakehouse.
 1. Esegui lo script della query SQL. Dopo aver eseguito lo script, dovresti vedere le seguenti tabelle e store procedure nello schema Gold del tuo Fabric Data Warehouse:  
 ![dw-views](images/dw-objects.jpg)
 
