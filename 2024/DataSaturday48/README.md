@@ -637,7 +637,7 @@ Aggiornare la pipeline dell'orchestrator, **orchestrator Load WWI to Fabric**, p
     | Settings | Parameters         | sinktable         | Dynamic Content | @item().sinktable               |
     | Settings | Parameters         | storedprocschema  | Dynamic Content | @item().storedprocschema        |
     | Settings | Parameters         | storedprocname    | Dynamic Content | @item().storedprocname          |
-Salva la pipeline **orchestrator Load WWI to Fabric**. Eseguiamolo. Se hai già eseguito le pipeline per caricare il Fabric Lakeshouse, esegui semplicemente il caricamento dal primo Lakehouse o "Bronze" al Data Warehouse. ![part3-run](images/part3-run.jpg)
+Salva la pipeline **orchestrator Load WWI to Fabric**. Eseguiamolo. Se hai già eseguito le pipeline per caricare il Fabric Lakeshouse, esegui semplicemente il caricamento dal primo Lakehouse o "Bronze" al Data Warehouse.
 
 
 
