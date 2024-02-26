@@ -488,6 +488,7 @@ Ora dobbiamo modificare la pipeline che fa da Orchestrator, **orchestrator Load 
     | Settings | Parameters         | Tablekey2         | Dynamic Content | @item().tablekey2               |
 
 Il risultato finale dovrebbe essere come lo schema seguente: ![run-gold](images/run-gold-only.jpg)
+
 Dopo aver fatto girare la pipeline dovremmoa vere la seguente situazione all'interno del lakehouse: ![gold-lh](images/goldlh-tables.jpg)
 
 ## Costruire il Gold Layer con il secondo pattern (datawarehouse)
