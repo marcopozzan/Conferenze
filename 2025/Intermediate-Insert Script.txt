@@ -1,2 +1,0 @@
-INSERT INTO RAW.raw_reviews
-VALUES (3176, CURRENT_TIMESTAMP, 'Zoltan', 'excellent stay!', 'positive')
